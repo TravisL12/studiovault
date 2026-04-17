@@ -1,2 +1,2 @@
-# vault.github.io
+# studio.github.io
 A curated collection of creative links.
