@@ -70,7 +70,7 @@ function setupEventListeners() {
 
     const newStudio = {
       id: Date.now(),
-      name:
+      title:
         nameInp.value || urlInp.value.split("//")[1]?.split(".")[0] || "Studio",
       url: urlInp.value.startsWith("http")
         ? urlInp.value
@@ -246,7 +246,7 @@ window.saveEdit = (id) => {
     .map((t) => t.trim())
     .filter((t) => t);
   masterStudios = masterStudios.map((s) =>
-    s.id === id ? { ...s, name, url, tags } : s,
+    s.id === id ? { ...s, title: name, url, tags } : s,
   );
   studios = [...masterStudios];
   editingId = null;
