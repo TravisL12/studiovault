@@ -22,6 +22,8 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const linksCol = collection(db, "userLinks");
 
+// CRUD - create read update delete
+
 export const fetchData = async () => {
   const snapshot = await getDocs(linksCol);
   return snapshot.docs.map((d) => ({ firestoreId: d.id, ...d.data() }));
