@@ -23,6 +23,15 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const linksCol = collection(db, "userLinks");
 
+const fetchData = async () => {
+  const data = await getDocs(linksCol, "userLinks");
+
+  data.forEach((doc) => {
+    console.log(`${doc.id} =>`, doc.data());
+  });
+};
+fetchData();
+
 // 3. Function to Add a Link
 async function addLink(title, url) {
   try {
@@ -48,17 +57,10 @@ async function editLink(id, newTitle, newUrl) {
   renderLinks();
 }
 
-// 5. Event Listener for the Save Button
-document.getElementById("saveBtn").addEventListener("click", () => {
-  const title = document.getElementById("titleInput").value;
-  const url = document.getElementById("urlInput").value;
-  if (title && url) addLink(title, url);
-});
-
 // Grab the buttons from your HTML
-const saveButton = document.getElementById("submitLinkBtn");
-const titleField = document.getElementById("titleInput");
-const urlField = document.getElementById("urlInput");
+const saveButton = document.getElementById("addStudioBtn");
+const titleField = document.getElementById("newStudioName");
+const urlField = document.getElementById("newStudioUrl");
 
 // The "Listener" (This is the magic part)
 saveButton.addEventListener("click", async () => {
