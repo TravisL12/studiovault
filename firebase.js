@@ -23,14 +23,16 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const linksCol = collection(db, "userLinks");
 
-const fetchData = async () => {
+export const fetchData = async () => {
   const data = await getDocs(linksCol, "userLinks");
 
+  const allSites = [];
   data.forEach((doc) => {
-    console.log(`${doc.id} =>`, doc.data());
+    allSites.push(doc.data());
   });
+  const d = await Promise.all(allSites);
+  return d;
 };
-fetchData();
 
 // 3. Function to Add a Link
 async function addLink(title, url) {

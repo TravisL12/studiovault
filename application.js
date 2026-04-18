@@ -1,3 +1,4 @@
+import { fetchData } from "./firebase.js";
 import { masterStudios } from "./studios.js";
 
 // STATE
@@ -19,7 +20,11 @@ const emptyState = document.getElementById("emptyState");
 const resultCountText = document.getElementById("resultCount");
 
 // INITIALIZE
-function init() {
+async function init() {
+  const data = await fetchData();
+  studios = [...data, ...studios]
+    .filter((x) => x.title)
+    .map((x) => ({ ...x, tags: x.tags || [] }));
   render();
   setupEventListeners();
 }
@@ -95,7 +100,7 @@ function render() {
   // FILTER & SORT
   let filtered = studios.filter((s) => {
     const matchesSearch =
-      s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      s.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       s.url.toLowerCase().includes(searchTerm.toLowerCase()) ||
       s.tags.some((t) => t.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesTags =
@@ -104,7 +109,7 @@ function render() {
   });
 
   if (sortBy === "alpha") {
-    filtered.sort((a, b) => a.name.localeCompare(b.name));
+    filtered.sort((a, b) => a.title.localeCompare(b.title));
   } else {
     filtered.sort((a, b) => b.id - a.id);
   }
@@ -121,7 +126,7 @@ function render() {
       card.innerHTML = `
                         <div class="relative z-10 space-y-3 h-full flex flex-col justify-between">
                             <div class="space-y-2">
-                                <input id="editName" class="w-full bg-stone-50 p-2 rounded-lg text-sm font-bold border border-stone-200 focus:ring-1 ring-custom-blue outline-none" value="${studio.name}">
+                                <input id="editName" class="w-full bg-stone-50 p-2 rounded-lg text-sm font-bold border border-stone-200 focus:ring-1 ring-custom-blue outline-none" value="${studio.title}">
                                 <input id="editUrl" class="w-full bg-stone-50 p-2 rounded-lg text-xs border border-stone-200 focus:ring-1 ring-custom-blue outline-none" value="${studio.url}">
                                 <textarea id="editTags" class="w-full bg-stone-50 p-2 rounded-lg text-xs border border-stone-200 h-20 resize-none font-medium outline-none">${studio.tags.join(", ")}</textarea>
                             </div>
@@ -159,7 +164,7 @@ function render() {
                                         </button>
                                     </div>
                                 </div>
-                                <h3 class="text-xl font-bold text-stone-900 mb-1 group-hover:text-custom-blue transition-colors line-clamp-2 leading-tight tracking-tight">${studio.name}</h3>
+                                <h3 class="text-xl font-bold text-stone-900 mb-1 group-hover:text-custom-blue transition-colors line-clamp-2 leading-tight tracking-tight">${studio.title}</h3>
                                 <div class="flex flex-wrap gap-1.5 mt-4">${tagHtml}</div>
                             </div>
                             <div class="mt-8 relative z-10 pt-4 border-t border-stone-50">
